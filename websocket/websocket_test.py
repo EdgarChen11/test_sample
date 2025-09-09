@@ -2,17 +2,36 @@ import asyncio
 import websockets
 from datetime import datetime
 
+### 設定區 開始 ###
+
+USE_SERVERS = [1, 2, 3]
+MESSAGE_DELAY = 0.5
+IGNORE_PATTERNS = ["Request served by"]
+
+# ANSI 顏色控制碼
 GREEN_CHECK = "\033[92m✅\033[0m"
 RED_CROSS = "\033[91m❌\033[0m"
 
-# log 函式
+### 設定區 結束 ###
+
+
+# log 函式（同時寫入測試與錯誤 log）
 def log(message, success=True):
     symbol = GREEN_CHECK if success else RED_CROSS
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     log_message = f"{timestamp} - {symbol} {message}"
+
+    # 終端機輸出
     print(log_message)
+
+    # 所有測試結果
     with open("websocket_test.log", "a", encoding="utf-8") as f:
         f.write(log_message + "\n")
+
+    # 失敗記到 error log
+    if not success:
+        with open("websocket_error.log", "a", encoding="utf-8") as f:
+            f.write(log_message + "\n")
 
 # WebSocket 伺服器設定
 servers = {
@@ -21,13 +40,7 @@ servers = {
     3: "wss://wwww.123.123/",  # 故意錯誤的網址
 }
 
-### 設定區 開始 ###
 
-USE_SERVERS = [1, 2, 3]
-MESSAGE_DELAY = 0.5
-IGNORE_PATTERNS = ["Request served by"]
-
-### 設定區 結束 ###
 
 async def recv_filtered(ws):
     while True:

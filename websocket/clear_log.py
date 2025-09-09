@@ -4,7 +4,10 @@
 import os
 
 # 指定要清空的 log 檔案
-LOG_FILE = "websocket_test.log"
+LOG_FILES = [
+    "websocket_test.log",
+    "websocket_error.log"
+]
 
 def clear_log(file_path):
     if os.path.exists(file_path):
@@ -15,4 +18,5 @@ def clear_log(file_path):
         print(f"⚠️ 檔案不存在: {file_path}")
 
 if __name__ == "__main__":
-    clear_log(LOG_FILE)
+    for log_file in LOG_FILES:
+        clear_log(log_file)

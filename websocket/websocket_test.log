@@ -1,0 +1,13 @@
+2025-09-09 22:25:41 - [91m❌[0m WebSocket 連線失敗 (wss://wwww.123.123/): [Errno 11001] getaddrinfo failed
+2025-09-09 22:25:41 - [92m✅[0m 測試完成 (wss://wwww.123.123/) | 成功: 0, 失敗: 4
+2025-09-09 22:25:42 - [92m✅[0m WebSocket 連線建立成功: wss://ws.postman-echo.com/raw
+2025-09-09 22:25:42 - [92m✅[0m WebSocket 連線建立成功: wss://echo.websocket.org/
+2025-09-09 22:25:42 - [92m✅[0m ⚠️ 忽略非測試訊息: "Request served by 4d896d95b55478"
+2025-09-09 22:25:42 - [92m✅[0m 訊息回應正確: "Hi Pikachu" (wss://ws.postman-echo.com/raw)
+2025-09-09 22:25:42 - [92m✅[0m 訊息回應正確: "Hi Pikachu" (wss://echo.websocket.org/)
+2025-09-09 22:25:43 - [92m✅[0m 多訊息順序驗證成功 (wss://ws.postman-echo.com/raw)
+2025-09-09 22:25:43 - [92m✅[0m 多訊息順序驗證成功 (wss://echo.websocket.org/)
+2025-09-09 22:25:43 - [92m✅[0m WebSocket 連線成功關閉 (wss://ws.postman-echo.com/raw)
+2025-09-09 22:25:43 - [92m✅[0m 測試完成 (wss://ws.postman-echo.com/raw) | 成功: 4, 失敗: 0
+2025-09-09 22:25:43 - [92m✅[0m WebSocket 連線成功關閉 (wss://echo.websocket.org/)
+2025-09-09 22:25:43 - [92m✅[0m 測試完成 (wss://echo.websocket.org/) | 成功: 4, 失敗: 0
