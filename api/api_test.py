@@ -1,6 +1,4 @@
 import requests
-from datetime import datetime
-import os
 import sys
 from config import get_symbol, get_log_files, log, clear_logs
 # -------------------------------
@@ -8,7 +6,7 @@ from config import get_symbol, get_log_files, log, clear_logs
 # -------------------------------
 
 # 要測試的 Pokémon 名稱，可以是英文名稱，也可以是編號
-pokemon_input = "25"  # 可改成其他名稱或編號測試 
+pokemon_input = "pikachu" 
 
 # 測試網址
 API_URL = f"https://pokeapi.co/api/v2/pokemon/{pokemon_input}"
@@ -69,7 +67,11 @@ def run_tests():
     else:
         log("跳過 JSON 驗證，因為 HTTP status != 200", info=True)
 
-    # 5. name 欄位驗證
+    # 5. id/name 欄位驗證
+
+    # 根據輸入的 pokemon_input 是數字還是名稱來驗證
+    # isdigit：檢查字串是否由數字組成，只對0跟正整數有效
+    
     if pokemon_input.isdigit():
         # 如果輸入的是數字 → 用 ID 驗證
         if data.get("id") == int(pokemon_input):
@@ -79,7 +81,7 @@ def run_tests():
     else:
         # 如果輸入的是名稱 → 用 name 驗證
         if data.get("name") == pokemon_input:
-            log(f'name="{pokemon_input}" 驗證成功')
+            log(f'name 驗證成功 (取得: {data.get("name")})')
         else:
             log(f'name 欄位驗證失敗 (取得: {data.get("name")})', success=False)
             
