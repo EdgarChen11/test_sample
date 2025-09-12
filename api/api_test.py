@@ -6,7 +6,7 @@ from config import get_symbol, get_log_files, log, clear_logs
 # -------------------------------
 
 # 要測試的 Pokémon 名稱，可以是英文名稱，也可以是編號
-pokemon_input = "pikachu" 
+pokemon_input = "25" 
 
 # 測試網址
 API_URL = f"https://pokeapi.co/api/v2/pokemon/{pokemon_input}"
@@ -71,10 +71,11 @@ def run_tests():
 
     # 根據輸入的 pokemon_input 是數字還是名稱來驗證
     # isdigit：檢查字串是否由數字組成，只對0跟正整數有效
-    
+
     if pokemon_input.isdigit():
         # 如果輸入的是數字 → 用 ID 驗證
-        if data.get("id") == int(pokemon_input):
+        # 確保兩邊格式一致，所以兩邊都int 再比較
+        if int(data.get("id")) == int(pokemon_input):
             log(f'ID 驗證成功 (取得: {data.get("id")})')
         else:
             log(f'ID 驗證失敗 (取得: {data.get("id")})', success=False)
