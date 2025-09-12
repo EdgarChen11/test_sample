@@ -2,59 +2,16 @@ import requests
 from datetime import datetime
 import os
 import sys
-
+from config import get_symbol, get_log_files, log, clear_logs
 # -------------------------------
 # 設定
 # -------------------------------
 
 # 要測試的 Pokémon 名稱，可以是英文名稱，也可以是編號
-pokemon_name = "pikachu" 
+pokemon_input = "25"  # 可改成其他名稱或編號測試 
 
 # 測試網址
-API_URL = f"https://pokeapi.co/api/v2/pokemon/{pokemon_name}"
-
-# 彩色符號
-GREEN_CHECK = "\033[92m✅\033[0m"
-RED_CROSS = "\033[91m❌\033[0m"
-INFO = "\033[94mℹ️\033[0m"
-
-# Log 檔案
-LOG_FILE = "api_test.log"
-ERROR_LOG_FILE = "api_error.log"
-
-# -------------------------------
-# Log 功能
-# -------------------------------
-def log(message, success=True, info=False):
-    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    if info:
-        symbol = INFO
-        plain_symbol = "[INFO]"
-    else:
-        symbol = GREEN_CHECK if success else RED_CROSS
-        plain_symbol = "[PASS]" if success else "[FAIL]"
-
-    console_msg = f"{timestamp} - {symbol} {message}"
-    file_msg = f"{timestamp} - {plain_symbol} {message}"
-
-    print(console_msg)
-    with open(LOG_FILE, "a", encoding="utf-8") as f:
-        f.write(file_msg + "\n")
-
-    if not success:
-        with open(ERROR_LOG_FILE, "a", encoding="utf-8") as f:
-            f.write(file_msg + "\n")
-
-# -------------------------------
-# 清除 log
-# -------------------------------
-def clear_logs():
-    for f in [LOG_FILE, ERROR_LOG_FILE]:
-        if os.path.exists(f):
-            open(f, "w", encoding="utf-8").close()
-            print(f"已清除 {f}")
-        else:
-            print(f"{f} 不存在，略過")
+API_URL = f"https://pokeapi.co/api/v2/pokemon/{pokemon_input}"
 
 # -------------------------------
 # API 測試
@@ -88,7 +45,7 @@ def run_tests():
     # 3. 大小寫敏感
     log("開始測試: 大小寫敏感", info=True)
     try:
-        case_test = requests.get(f"https://pokeapi.co/api/v2/pokemon/{pokemon_name.capitalize()}")
+        case_test = requests.get(f"https://pokeapi.co/api/v2/pokemon/{pokemon_input.capitalize()}")
         case_status = case_test.status_code
         if case_status == 200:
             log("大小寫敏感驗證成功")
@@ -97,7 +54,7 @@ def run_tests():
     except Exception as e:
         log(f"大小寫敏感測試發生錯誤: {e}", success=False)
 
-    # 4. JSON 內容驗證
+    # 4. JSON 內容驗證 確認是否包含 id, name, height, weight
     log("開始測試: JSON 欄位", info=True)
     data = None
     if status == 200:
@@ -113,15 +70,19 @@ def run_tests():
         log("跳過 JSON 驗證，因為 HTTP status != 200", info=True)
 
     # 5. name 欄位驗證
-    log("開始測試: name 欄位", info=True)
-    if data:
-        if data.get("name") == pokemon_name:
-            log(f'name="{pokemon_name}" 驗證成功')
+    if pokemon_input.isdigit():
+        # 如果輸入的是數字 → 用 ID 驗證
+        if data.get("id") == int(pokemon_input):
+            log(f'ID 驗證成功 (取得: {data.get("id")})')
+        else:
+            log(f'ID 驗證失敗 (取得: {data.get("id")})', success=False)
+    else:
+        # 如果輸入的是名稱 → 用 name 驗證
+        if data.get("name") == pokemon_input:
+            log(f'name="{pokemon_input}" 驗證成功')
         else:
             log(f'name 欄位驗證失敗 (取得: {data.get("name")})', success=False)
-    else:
-        log("跳過 name 欄位驗證，data 為 None", info=True)
-
+            
     # 6. 發送非法參數
     log("開始測試: 非法參數", info=True)
     invalid_url = "https://pokeapi.co/api/v2/pokemon/invalid_name"
