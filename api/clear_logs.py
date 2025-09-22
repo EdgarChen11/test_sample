@@ -1,7 +1,7 @@
 import os
 
-LOG_FILE = "test_sample/api/log/api_test.log"
-ERROR_LOG_FILE = "test_sample/api/log/api_error.log"
+LOG_FILE = "log/api_test.log"
+ERROR_LOG_FILE = "log/api_error.log"
 
 def clear_logs():
     for f in [LOG_FILE, ERROR_LOG_FILE]:

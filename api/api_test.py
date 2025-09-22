@@ -117,4 +117,5 @@ if __name__ == "__main__":
         clear_logs()
     else:
         run_tests()
-        generate_report()
+        generate_report("api_report.html")
+

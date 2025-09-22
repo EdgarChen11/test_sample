@@ -18,8 +18,11 @@ def get_symbol(status):
 # Log 檔案，指定路徑
 # -------------------------------
 def get_log_files():
-    log_dir = "test_sample/api/log"
-    os.makedirs(log_dir, exist_ok=True)  # 確保資料夾存在
+    # 取得 config.py 所在目錄
+    base_dir = os.path.dirname(os.path.abspath(__file__))  # test_sample/api
+    log_dir = os.path.join(base_dir, "log")  # test_sample/api/log
+    os.makedirs(log_dir, exist_ok=True)
+
     return {
         "log": os.path.join(log_dir, "api_test.log"),
         "error": os.path.join(log_dir, "api_error.log")
@@ -29,9 +32,8 @@ def get_log_files():
 # Report 檔案，指定路徑
 # -------------------------------
 def get_report_file(name="report.html"):
-    report_dir = "test_sample/api/report"
+    report_dir = os.path.join("test_sample", "api", "report")
     os.makedirs(report_dir, exist_ok=True)
-    return os.path.join(report_dir, name)
 
 # -------------------------------
 # Log 功能

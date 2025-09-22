@@ -5,12 +5,16 @@ from config import get_log_files
 # 產生 HTML 報表
 # -------------------------------
 def generate_report(report_name="api_report.html"):
-    report_dir = "test_sample/api/report"
-    os.makedirs(report_dir, exist_ok=True)  # 確保資料夾存在
+    # 取得當前檔案所在目錄
+    base_dir = os.path.dirname(os.path.abspath(__file__))  # test_sample/api
+    report_dir = os.path.join(base_dir, "report")  # test_sample/api/report
+    os.makedirs(report_dir, exist_ok=True)
+
+    report_name = os.path.basename(report_name)  # 只取檔名
     report_path = os.path.join(report_dir, report_name)
 
-    log_files = get_log_files()  # 取得字典
-    log_path = log_files["log"]  # 取得 log 檔案路徑
+    log_files = get_log_files()
+    log_path = log_files["log"]
 
     if not os.path.exists(log_path):
         print("沒有找到 log 檔案，無法產生報告")
