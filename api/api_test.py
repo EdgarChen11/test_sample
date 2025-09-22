@@ -1,13 +1,13 @@
 import requests
 import sys
-from config import get_symbol, get_log_files, log, clear_logs
+from config import get_symbol, get_log_files, get_report_file, log, clear_logs
 from html_config import generate_report
 # -------------------------------
 # 設定
 # -------------------------------
 
 # 要測試的 Pokémon 名稱，可以是英文名稱，也可以是編號
-pokemon_input = "999" 
+pokemon_input = "25" 
 
 # 測試網址
 API_URL = f"https://pokeapi.co/api/v2/pokemon/{pokemon_input}"

@@ -4,7 +4,11 @@ from config import get_log_files
 # -------------------------------
 # 產生 HTML 報表
 # -------------------------------
-def generate_report():
+def generate_report(report_name="api_report.html"):
+    report_dir = "test_sample/api/report"
+    os.makedirs(report_dir, exist_ok=True)  # 確保資料夾存在
+    report_path = os.path.join(report_dir, report_name)
+
     log_files = get_log_files()  # 取得字典
     log_path = log_files["log"]  # 取得 log 檔案路徑
 
@@ -36,7 +40,7 @@ def generate_report():
 
     # 生成 log 內容
     for line in lines:
-        text = line.strip()  # 去掉行首尾空白
+        text = line.strip()
         if "[PASS]" in text:
             html += f"<span class='pass'>{text}</span><br>"
         elif "[FAIL]" in text:
@@ -51,8 +55,7 @@ def generate_report():
 </html>"""
 
     # 寫入 HTML 檔案
-    with open("api_report.html", "w", encoding="utf-8") as f:
+    with open(report_path, "w", encoding="utf-8") as f:
         f.write(html)
 
-    print("✅ 已產生報告：api_report.html")
-
+    print(f"✅ 已產生報告：{report_path}")
