@@ -7,7 +7,7 @@ from html_config import generate_report
 # -------------------------------
 
 # 要測試的 Pokémon 名稱，可以是英文名稱，也可以是編號
-pokemon_input = "25" 
+pokemon_input = "25ˇˇˇ" 
 
 # 測試網址
 API_URL = f"https://pokeapi.co/api/v2/pokemon/{pokemon_input}"
@@ -72,21 +72,27 @@ def run_tests():
 
     # 根據輸入的 pokemon_input 是數字還是名稱來驗證
     # isdigit：檢查字串是否由數字組成，只對0跟正整數有效
-
-    if pokemon_input.isdigit():
-        # 如果輸入的是數字 → 用 ID 驗證
-        # 確保兩邊格式一致，所以兩邊都int 再比較
-        if int(data.get("id")) == int(pokemon_input):
-            log(f'ID 驗證成功 (取得: {data.get("id")})')
-        else:
-            log(f'ID 驗證失敗 (取得: {data.get("id")})', success=False)
+    log("開始測試: ID/Name 欄位驗證", info=True)
+    
+    # 瞎傳參數導致json不存在的情況下
+    if data is None:
+        log("JSON 資料不存在，無法驗證 id/name 欄位", success=False)
+        
     else:
-        # 如果輸入的是名稱 → 用 name 驗證
-        if data.get("name") == pokemon_input:
-            log(f'name 驗證成功 (取得: {data.get("name")})')
+        if pokemon_input.isdigit():
+            # 如果輸入的是數字 → 用 ID 驗證
+            # 確保兩邊格式一致，所以兩邊都int 再比較
+            if int(data.get("id")) == int(pokemon_input):
+                log(f'ID 驗證成功 (取得: {data.get("id")})')
+            else:
+                log(f'ID 驗證失敗 (取得: {data.get("id")})', success=False)
         else:
-            log(f'name 欄位驗證失敗 (取得: {data.get("name")})', success=False)
-            
+            # 如果輸入的是名稱 → 用 name 驗證
+            if data.get("name") == pokemon_input:
+                log(f'name 驗證成功 (取得: {data.get("name")})')
+            else:
+                log(f'name 欄位驗證失敗 (取得: {data.get("name")})', success=False)
+                
     # 6. 發送非法參數
     log("開始測試: 非法參數", info=True)
     invalid_url = "https://pokeapi.co/api/v2/pokemon/invalid_name"
