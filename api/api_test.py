@@ -7,7 +7,7 @@ from html_config import generate_report
 # -------------------------------
 
 # 要測試的 Pokémon 名稱，可以是英文名稱，也可以是編號
-pokemon_input = "25ˇˇˇ" 
+pokemon_input = "25" 
 
 # 測試網址
 API_URL = f"https://pokeapi.co/api/v2/pokemon/{pokemon_input}"
@@ -77,7 +77,7 @@ def run_tests():
     # 瞎傳參數導致json不存在的情況下
     if data is None:
         log("JSON 資料不存在，無法驗證 id/name 欄位", success=False)
-        
+
     else:
         if pokemon_input.isdigit():
             # 如果輸入的是數字 → 用 ID 驗證
