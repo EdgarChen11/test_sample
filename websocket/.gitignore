@@ -1,0 +1,10 @@
+.vscode/
+*.log
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.DS_Store
+Thumbs.db
+.pytest_cache/
+*.html
