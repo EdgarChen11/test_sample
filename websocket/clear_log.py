@@ -4,19 +4,19 @@
 import os
 
 # 指定要清空的 log 檔案
-LOG_FILES = [
-    "websocket_test.log",
-    "websocket_error.log"
-]
 
-def clear_log(file_path):
-    if os.path.exists(file_path):
-        with open(file_path, "w", encoding="utf-8") as f:
-            pass  # "w" 模式會覆寫檔案內容，保留檔案但清空舊資料
-        print(f"✅ 已清空檔案內容: {file_path}")
-    else:
-        print(f"⚠️ 檔案不存在: {file_path}")
+LOG_FILE = "log/websocket_test.log"
+ERROR_LOG_FILE = "log/websocket_error.log"
+
+def clear_logs():
+    for f in [LOG_FILE, ERROR_LOG_FILE]:
+        if os.path.exists(f):
+            open(f, "w", encoding="utf-8").close()
+            print(f"已清除 {f}")
+        else:
+            print(f"{f} 不存在，略過")
 
 if __name__ == "__main__":
-    for log_file in LOG_FILES:
-        clear_log(log_file)
+    clear_logs()
+
+

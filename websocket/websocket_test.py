@@ -1,45 +1,22 @@
 import asyncio
+import sys
 import websockets
 from datetime import datetime
+from config import get_symbol, get_log_files, get_report_file, log, clear_logs
+from html_config import generate_report
 
 ### 設定區 開始 ###
-
 USE_SERVERS = [1, 2, 3]
 MESSAGE_DELAY = 0.5
 IGNORE_PATTERNS = ["Request served by"]
-
-# ANSI 顏色控制碼
-GREEN_CHECK = "\033[92m✅\033[0m"
-RED_CROSS = "\033[91m❌\033[0m"
-
 ### 設定區 結束 ###
-
-
-# log 函式（同時寫入測試與錯誤 log）
-def log(message, success=True):
-    symbol = GREEN_CHECK if success else RED_CROSS
-    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    log_message = f"{timestamp} - {symbol} {message}"
-
-    # 終端機輸出
-    print(log_message)
-
-    # 所有測試結果
-    with open("websocket_test.log", "a", encoding="utf-8") as f:
-        f.write(log_message + "\n")
-
-    # 失敗記到 error log
-    if not success:
-        with open("websocket_error.log", "a", encoding="utf-8") as f:
-            f.write(log_message + "\n")
 
 # WebSocket 伺服器設定
 servers = {
-    1: "wss://ws.postman-echo.com/raw", # echo server
-    2: "wss://echo.websocket.org/", #不是單純的echo server，會回一個東西
-    3: "wss://wwww.123.123/",  # 故意錯誤的網址
+    1: "wss://ws.postman-echo.com/raw",  # echo server
+    2: "wss://echo.websocket.org/",      # 不是單純的 echo server
+    3: "wss://wwww.123.123/",            # 故意錯誤的網址
 }
-
 
 
 async def recv_filtered(ws):
@@ -49,6 +26,7 @@ async def recv_filtered(ws):
             log(f'⚠️ 忽略非測試訊息: "{msg}"')
             continue
         return msg
+
 
 async def websocket_test(url):
     success_count = 0
@@ -107,23 +85,35 @@ async def websocket_test(url):
         fail_count += 4
 
     log(f"測試完成 ({url}) | 成功: {success_count}, 失敗: {fail_count}")
-    return url, success_count, fail_count  # 回傳統計結果
+    return url, success_count, fail_count
+
 
 # 主流程：多網址並行測試
 async def main():
     tasks = [websocket_test(servers[s]) for s in USE_SERVERS]
     results = await asyncio.gather(*tasks, return_exceptions=True)
 
-    # 印出總結
     print("\n=== 測試總結 ===")
     for res in results:
         if isinstance(res, tuple):
             url, success, fail = res
             print(f"{url} 成功: {success}, 失敗: {fail}")
         else:
-            # 如果發生未捕捉的例外
             print(f"未知錯誤: {res}")
+    return results
 
+
+def run_tests():
+    """封裝 async main()，方便呼叫"""
+    return asyncio.run(main())
+
+
+# -------------------------------
+# 主程式
+# -------------------------------
 if __name__ == "__main__":
-    asyncio.run(main())
-
+    if len(sys.argv) > 1 and sys.argv[1] == "--clear":
+        clear_logs()
+    else:
+        run_tests()
+        generate_report("api_report.html")
